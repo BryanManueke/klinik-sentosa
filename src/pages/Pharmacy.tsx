@@ -1,44 +1,63 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Pill, Plus, Minus, AlertTriangle } from 'lucide-react';
-import { toast } from 'sonner';
-
-interface Medicine {
-  id: string;
-  name: string;
-  stock: number;
-  minStock: number;
-  unit: string;
-  price: number;
-}
+import { Pill, Plus, Minus, AlertTriangle, ClipboardList, Check } from 'lucide-react';
+import { useData } from '@/contexts/DataContext';
 
 const Pharmacy = () => {
-  const [medicines, setMedicines] = useState<Medicine[]>([
-    { id: 'M001', name: 'Paracetamol 500mg', stock: 150, minStock: 50, unit: 'Tablet', price: 500 },
-    { id: 'M002', name: 'Amoxicillin 500mg', stock: 80, minStock: 30, unit: 'Kapsul', price: 2000 },
-    { id: 'M003', name: 'Vitamin C 1000mg', stock: 200, minStock: 50, unit: 'Tablet', price: 1500 },
-    { id: 'M004', name: 'OBH Sirup', stock: 25, minStock: 20, unit: 'Botol', price: 15000 },
-    { id: 'M005', name: 'Betadine', stock: 40, minStock: 20, unit: 'Botol', price: 25000 },
-  ]);
+  const { medicines, updateMedicineStock, prescriptions, processPrescription } = useData();
 
   const handleStockChange = (id: string, change: number) => {
-    setMedicines(medicines.map(med =>
-      med.id === id ? { ...med, stock: Math.max(0, med.stock + change) } : med
-    ));
-    toast.success(change > 0 ? 'Stok ditambahkan' : 'Stok dikurangi');
+    updateMedicineStock(id, change);
   };
 
   const lowStockMedicines = medicines.filter(m => m.stock <= m.minStock);
+  const pendingPrescriptions = prescriptions.filter(p => p.status === 'pending');
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-foreground">Manajemen Apotek</h1>
-        <p className="text-muted-foreground">Kelola stok obat dan inventory</p>
+        <p className="text-muted-foreground">Kelola stok obat dan resep masuk</p>
       </div>
+
+      {pendingPrescriptions.length > 0 && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <ClipboardList className="h-5 w-5" />
+              Resep Masuk ({pendingPrescriptions.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {pendingPrescriptions.map(prescription => (
+                <div key={prescription.id} className="bg-card border rounded-lg p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="font-semibold text-lg">{prescription.patientName}</h3>
+                      <p className="text-sm text-muted-foreground">Dr. {prescription.doctorName} • {prescription.date}</p>
+                    </div>
+                    <Button size="sm" onClick={() => processPrescription(prescription.id)}>
+                      <Check className="h-4 w-4 mr-2" />
+                      Proses Resep
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {prescription.items.map((item, idx) => (
+                      <div key={idx} className="flex justify-between text-sm border-b pb-1 last:border-0">
+                        <span>{item.medicineName} x {item.amount}</span>
+                        <span className="text-muted-foreground">{item.instructions}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {lowStockMedicines.length > 0 && (
         <Card className="border-destructive/50 bg-destructive/5">

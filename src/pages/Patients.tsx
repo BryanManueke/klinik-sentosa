@@ -4,29 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Search, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface Patient {
-  id: string;
-  name: string;
-  age: number;
-  gender: string;
-  phone: string;
-  address: string;
-  lastVisit: string;
-}
+import { useData, Patient } from '@/contexts/DataContext';
 
 const Patients = () => {
-  const [patients, setPatients] = useState<Patient[]>([
-    { id: 'P001', name: 'Budi Santoso', age: 35, gender: 'Laki-laki', phone: '08123456789', address: 'Airmadidi', lastVisit: '2024-01-15' },
-    { id: 'P002', name: 'Siti Nurhaliza', age: 28, gender: 'Perempuan', phone: '08198765432', address: 'Manado', lastVisit: '2024-01-14' },
-    { id: 'P003', name: 'Ahmad Fauzi', age: 42, gender: 'Laki-laki', phone: '08234567890', address: 'Tomohon', lastVisit: '2024-01-13' },
-  ]);
-
+  const { patients, addPatient, addToQueue } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -41,53 +26,21 @@ const Patients = () => {
       return;
     }
 
-    const newPatient: Patient = {
-      id: `P${String(patients.length + 1).padStart(3, '0')}`,
+    addPatient({
       name: formData.name,
       age: parseInt(formData.age),
-      gender: formData.gender,
+      gender: formData.gender as 'Laki-laki' | 'Perempuan',
       phone: formData.phone,
       address: formData.address,
       lastVisit: new Date().toISOString().split('T')[0],
-    };
-
-    setPatients([...patients, newPatient]);
-    setIsDialogOpen(false);
-    resetForm();
-    toast.success('Pasien berhasil ditambahkan');
-  };
-
-  const handleUpdatePatient = () => {
-    if (!editingPatient) return;
-
-    const updatedPatients = patients.map(p =>
-      p.id === editingPatient.id
-        ? { ...p, ...formData, age: parseInt(formData.age) }
-        : p
-    );
-
-    setPatients(updatedPatients);
-    setIsDialogOpen(false);
-    setEditingPatient(null);
-    resetForm();
-    toast.success('Data pasien berhasil diperbarui');
-  };
-
-  const handleDeletePatient = (id: string) => {
-    setPatients(patients.filter(p => p.id !== id));
-    toast.success('Pasien berhasil dihapus');
-  };
-
-  const openEditDialog = (patient: Patient) => {
-    setEditingPatient(patient);
-    setFormData({
-      name: patient.name,
-      age: patient.age.toString(),
-      gender: patient.gender,
-      phone: patient.phone,
-      address: patient.address,
     });
-    setIsDialogOpen(true);
+
+    setIsDialogOpen(false);
+    resetForm();
+  };
+
+  const handleAddToQueue = (patientId: string) => {
+    addToQueue(patientId, 'Dr. Umum'); // Default doctor for now
   };
 
   const resetForm = () => {
@@ -98,7 +51,6 @@ const Patients = () => {
       phone: '',
       address: '',
     });
-    setEditingPatient(null);
   };
 
   const filteredPatients = patients.filter(p =>
@@ -127,7 +79,7 @@ const Patients = () => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>{editingPatient ? 'Edit Pasien' : 'Tambah Pasien Baru'}</DialogTitle>
+              <DialogTitle>Tambah Pasien Baru</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -186,8 +138,8 @@ const Patients = () => {
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Batal
               </Button>
-              <Button onClick={editingPatient ? handleUpdatePatient : handleAddPatient}>
-                {editingPatient ? 'Perbarui' : 'Simpan'}
+              <Button onClick={handleAddPatient}>
+                Simpan
               </Button>
             </div>
           </DialogContent>
@@ -234,18 +186,13 @@ const Patients = () => {
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => openEditDialog(patient)}
+                          variant="outline"
+                          size="sm"
+                          className="gap-2"
+                          onClick={() => handleAddToQueue(patient.id)}
                         >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeletePatient(patient.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <UserPlus className="h-4 w-4" />
+                          Antrian
                         </Button>
                       </div>
                     </td>

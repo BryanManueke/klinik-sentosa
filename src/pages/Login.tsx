@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, roles, Role } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Stethoscope } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -17,7 +17,7 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (login(email, password, selectedRole)) {
       toast.success('Login berhasil!');
       navigate('/');
@@ -32,6 +32,7 @@ const Login = () => {
     { value: roles.NURSE, label: 'Perawat', color: 'bg-accent' },
     { value: roles.PHARMACY, label: 'Apoteker', color: 'bg-medical-green' },
     { value: roles.OWNER, label: 'Pemilik', color: 'bg-medical-teal' },
+    { value: roles.PATIENT, label: 'Pasien', color: 'bg-blue-500' },
   ];
 
   return (
@@ -57,7 +58,7 @@ const Login = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -101,6 +102,14 @@ const Login = () => {
             </p>
           </form>
         </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Belum punya akun?{' '}
+            <Link to="/register" className="text-primary hover:underline font-medium">
+              Daftar di sini
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );

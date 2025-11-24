@@ -1,19 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Stethoscope, FileText, Save } from 'lucide-react';
+import { Stethoscope, FileText, Save, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { useData } from '@/contexts/DataContext';
 
 const Examination = () => {
-  const [selectedPatient] = useState({
-    id: 'P002',
-    name: 'Siti Nurhaliza',
-    age: 28,
-    gender: 'Perempuan',
-  });
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { getPatient, addMedicalRecord, addPrescription, medicines } = useData();
+
+  const patientId = searchParams.get('patientId');
+  const patient = patientId ? getPatient(patientId) : null;
 
   const [formData, setFormData] = useState({
     complaint: '',
@@ -22,34 +24,81 @@ const Examination = () => {
     temperature: '',
     heartRate: '',
     diagnosis: '',
-    prescription: '',
+    prescriptionNotes: '',
     notes: '',
   });
+
+  // Simple prescription item state for demo
+  const [selectedMedicine, setSelectedMedicine] = useState('');
+  const [medicineAmount, setMedicineAmount] = useState(1);
+  const [prescriptionItems, setPrescriptionItems] = useState<{ medicineId: string, medicineName: string, amount: number, instructions: string }[]>([]);
+
+  useEffect(() => {
+    if (!patientId) {
+      toast.error('ID Pasien tidak ditemukan');
+      navigate('/queue');
+    }
+  }, [patientId, navigate]);
+
+  const handleAddMedicine = () => {
+    if (!selectedMedicine) return;
+    const med = medicines.find(m => m.id === selectedMedicine);
+    if (med) {
+      setPrescriptionItems([...prescriptionItems, {
+        medicineId: med.id,
+        medicineName: med.name,
+        amount: medicineAmount,
+        instructions: 'Sesudah makan' // Default instruction
+      }]);
+      setSelectedMedicine('');
+      setMedicineAmount(1);
+    }
+  };
 
   const handleSave = () => {
     if (!formData.complaint || !formData.diagnosis) {
       toast.error('Mohon lengkapi keluhan dan diagnosis');
       return;
     }
-    toast.success('Rekam medis berhasil disimpan');
-    // Reset form
-    setFormData({
-      complaint: '',
-      symptoms: '',
-      bloodPressure: '',
-      temperature: '',
-      heartRate: '',
-      diagnosis: '',
-      prescription: '',
-      notes: '',
-    });
+
+    if (patient) {
+      // Save Medical Record
+      addMedicalRecord({
+        patientId: patient.id,
+        complaint: formData.complaint,
+        diagnosis: formData.diagnosis,
+        treatment: formData.prescriptionNotes, // Using notes as treatment summary
+        doctorName: 'Dr. Current User' // Should come from AuthContext
+      });
+
+      // Create Prescription if items exist
+      if (prescriptionItems.length > 0) {
+        addPrescription({
+          patientId: patient.id,
+          patientName: patient.name,
+          doctorName: 'Dr. Current User',
+          items: prescriptionItems
+        });
+        toast.success('Resep obat berhasil dibuat');
+      }
+
+      toast.success('Rekam medis berhasil disimpan');
+      navigate('/pharmacy');
+    }
   };
+
+  if (!patient) return <div>Loading...</div>;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Pemeriksaan Pasien</h1>
-        <p className="text-muted-foreground">Catat hasil pemeriksaan dan diagnosis</p>
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate('/queue')}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Pemeriksaan Pasien</h1>
+          <p className="text-muted-foreground">Catat hasil pemeriksaan dan diagnosis</p>
+        </div>
       </div>
 
       <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
@@ -63,19 +112,19 @@ const Examination = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">ID Pasien</p>
-              <p className="font-semibold text-foreground">{selectedPatient.id}</p>
+              <p className="font-semibold text-foreground">{patient.id}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Nama</p>
-              <p className="font-semibold text-foreground">{selectedPatient.name}</p>
+              <p className="font-semibold text-foreground">{patient.name}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Umur</p>
-              <p className="font-semibold text-foreground">{selectedPatient.age} tahun</p>
+              <p className="font-semibold text-foreground">{patient.age} tahun</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Jenis Kelamin</p>
-              <p className="font-semibold text-foreground">{selectedPatient.gender}</p>
+              <p className="font-semibold text-foreground">{patient.gender}</p>
             </div>
           </div>
         </CardContent>
@@ -164,16 +213,44 @@ const Examination = () => {
               rows={3}
             />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="prescription">Resep Obat</Label>
-            <Textarea
-              id="prescription"
-              value={formData.prescription}
-              onChange={(e) => setFormData({ ...formData, prescription: e.target.value })}
-              placeholder="Daftar obat dan dosis..."
-              rows={4}
-            />
+            <Label>Resep Obat</Label>
+            <div className="flex gap-2">
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={selectedMedicine}
+                onChange={(e) => setSelectedMedicine(e.target.value)}
+              >
+                <option value="">Pilih Obat</option>
+                {medicines.map(m => (
+                  <option key={m.id} value={m.id}>{m.name} (Stok: {m.stock})</option>
+                ))}
+              </select>
+              <Input
+                type="number"
+                className="w-20"
+                min="1"
+                value={medicineAmount}
+                onChange={(e) => setMedicineAmount(parseInt(e.target.value))}
+              />
+              <Button type="button" onClick={handleAddMedicine}>Tambah</Button>
+            </div>
+
+            {prescriptionItems.length > 0 && (
+              <div className="mt-2 border rounded-md p-2">
+                <ul className="space-y-1">
+                  {prescriptionItems.map((item, idx) => (
+                    <li key={idx} className="text-sm flex justify-between">
+                      <span>{item.medicineName} x {item.amount}</span>
+                      <span className="text-muted-foreground">{item.instructions}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="notes">Catatan Tambahan</Label>
             <Textarea
@@ -188,7 +265,7 @@ const Examination = () => {
       </Card>
 
       <div className="flex justify-end gap-3">
-        <Button variant="outline">Batal</Button>
+        <Button variant="outline" onClick={() => navigate('/queue')}>Batal</Button>
         <Button onClick={handleSave} className="gap-2">
           <Save className="h-4 w-4" />
           Simpan Rekam Medis

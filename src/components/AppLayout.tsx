@@ -1,15 +1,15 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth, roles } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Clock, 
-  Stethoscope, 
-  Pill, 
-  UserCog, 
-  FileText, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  Clock,
+  Stethoscope,
+  Pill,
+  UserCog,
+  FileText,
+  Settings,
   LogOut,
   Menu,
   X
@@ -27,17 +27,17 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: [roles.ADMIN, roles.DOCTOR, roles.NURSE, roles.PHARMACY, roles.OWNER] },
+    { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: [roles.ADMIN, roles.DOCTOR, roles.NURSE, roles.PHARMACY, roles.OWNER, roles.PATIENT] },
     { name: 'Pasien', href: '/patients', icon: Users, roles: [roles.ADMIN, roles.OWNER] },
     { name: 'Antrian', href: '/queue', icon: Clock, roles: [roles.ADMIN, roles.DOCTOR, roles.NURSE] },
     { name: 'Pemeriksaan', href: '/examination', icon: Stethoscope, roles: [roles.DOCTOR] },
-    { name: 'Apotek', href: '/pharmacy', icon: Pill, roles: [roles.PHARMACY, roles.ADMIN] },
+    { name: 'Apotek', href: '/pharmacy', icon: Pill, roles: [roles.PHARMACY, roles.ADMIN, roles.DOCTOR] },
     { name: 'Staff', href: '/staff', icon: UserCog, roles: [roles.OWNER, roles.ADMIN] },
     { name: 'Laporan', href: '/reports', icon: FileText, roles: [roles.OWNER, roles.ADMIN] },
     { name: 'Pengaturan', href: '/settings', icon: Settings, roles: [roles.OWNER, roles.ADMIN] },
   ];
 
-  const filteredNav = navigation.filter(item => 
+  const filteredNav = navigation.filter(item =>
     user && item.roles.includes(user.role)
   );
 
@@ -54,7 +54,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          
+
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Stethoscope className="h-5 w-5 text-primary-foreground" />
@@ -96,8 +96,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   className={`
                     flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
                     transition-colors duration-200
-                    ${isActive 
-                      ? 'bg-primary text-primary-foreground shadow-sm' 
+                    ${isActive
+                      ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                     }
                   `}
@@ -118,7 +118,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
