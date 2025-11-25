@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Sentosa Health Hub - Clinic Management System",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev": "powershell -ExecutionPolicy Bypass -File ./dev.ps1",
+    "dev:manual": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "build": "npm run build:backend && npm run build:frontend",
@@ -20,6 +21,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "tsx": "^4.20.6"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.1"
   }
 }

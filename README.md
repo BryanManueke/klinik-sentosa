@@ -21,19 +21,35 @@ sentosa-health-hub/
 
 ## Getting Started
 
-### Install All Dependencies
-```bash
-npm run install:all
-```
+### 🚀 Quick Start (Recommended)
 
-### Run Development (Both Backend and Frontend)
+Setelah clone repository, cukup jalankan:
+
 ```bash
 npm run dev
 ```
 
-This will start:
-- Backend API on `http://localhost:3001`
-- Frontend app on `http://localhost:8080`
+**Script ini akan otomatis:**
+- ✅ Mengecek apakah dependencies sudah terinstall
+- ✅ Menginstall dependencies jika belum ada (root, backend, frontend)
+- ✅ Menjalankan backend dan frontend secara bersamaan
+
+**Akses aplikasi:**
+- Frontend: `http://localhost:8080`
+- Backend API: `http://localhost:3001`
+
+### 📦 Manual Installation (Opsional)
+
+Jika ingin install dependencies secara manual terlebih dahulu:
+
+```bash
+npm run install:all
+```
+
+Kemudian jalankan:
+```bash
+npm run dev:manual
+```
 
 ### Run Separately
 
