@@ -36,11 +36,34 @@ const Examination = () => {
   const [prescriptionItems, setPrescriptionItems] = useState<{ medicineId: string, medicineName: string, amount: number, instructions: string }[]>([]);
 
   useEffect(() => {
-    if (!patientId) {
-      toast.error('ID Pasien tidak ditemukan');
-      navigate('/queue');
+    if (patientId && !patient) {
+      const timer = setTimeout(() => {
+        if (!patient) {
+          toast.error('Data pasien tidak ditemukan');
+          navigate('/queue');
+        }
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  }, [patientId, navigate]);
+  }, [patientId, patient, navigate]);
+
+  if (!patientId) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[80vh] space-y-4 text-center">
+        <div className="p-4 rounded-full bg-blue-100 dark:bg-blue-900/20">
+          <Stethoscope className="h-12 w-12 text-blue-600" />
+        </div>
+        <h2 className="text-2xl font-bold">Mulai Pemeriksaan</h2>
+        <p className="text-muted-foreground max-w-md">
+          Silakan pilih pasien dari daftar antrian untuk memulai pemeriksaan kesehatan.
+        </p>
+        <Button onClick={() => navigate('/queue')} size="lg" className="mt-4">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Kembali ke Antrian
+        </Button>
+      </div>
+    );
+  }
 
   const handleAddMedicine = () => {
     if (!selectedMedicine) return;
@@ -50,7 +73,7 @@ const Examination = () => {
         medicineId: med.id,
         medicineName: med.name,
         amount: medicineAmount,
-        instructions: 'Sesudah makan' // Default instruction
+        instructions: 'Sesudah makan'
       }]);
       setSelectedMedicine('');
       setMedicineAmount(1);
@@ -64,27 +87,25 @@ const Examination = () => {
     }
 
     if (patient) {
-      // Save Medical Record
       addMedicalRecord({
         patientId: patient.id,
         complaint: formData.complaint,
         diagnosis: formData.diagnosis,
-        treatment: formData.prescriptionNotes, // Using notes as treatment summary
-        doctorName: 'Dr. Current User' // Should come from AuthContext
+        treatment: formData.prescriptionNotes,
+        doctorName: 'Dr. Current User'
       });
 
-      // Create Prescription if items exist
       if (prescriptionItems.length > 0) {
         addPrescription({
           patientId: patient.id,
           patientName: patient.name,
           doctorName: 'Dr. Current User',
-          items: prescriptionItems
+          items: prescriptionItems,
+          status: 'ready'
         });
-        toast.success('Resep obat berhasil dibuat');
+        toast.success('Resep obat berhasil dibuat dan dikirim ke Apotek');
       }
 
-      // Update Queue Status to Completed
       const queueItem = queue.find(q => q.patientId === patient.id && q.status === 'in-progress');
       if (queueItem) {
         updateQueueStatus(queueItem.id, 'completed');
@@ -133,6 +154,14 @@ const Examination = () => {
             <div>
               <p className="text-sm text-muted-foreground">Jenis Kelamin</p>
               <p className="font-semibold text-foreground">{patient.gender}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">No. Telepon</p>
+              <p className="font-semibold text-foreground">{patient.phone}</p>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <p className="text-sm text-muted-foreground">Alamat</p>
+              <p className="font-semibold text-foreground truncate" title={patient.address}>{patient.address}</p>
             </div>
           </div>
         </CardContent>

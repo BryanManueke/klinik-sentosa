@@ -4,11 +4,11 @@ import { useAuth, roles, Role } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { FormField, FormInput } from '@/components/ui/form-field';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/validation-feedback';
-import { Stethoscope, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Stethoscope } from 'lucide-react';
 import { toast } from 'sonner';
 import { validateLoginForm, validateEmail, validatePassword } from '@/lib/validators';
 import { formatErrorMessage, getSuccessMessage } from '@/services/errorService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const Login = () => {
   // Real-time validation
   const validateField = (field: string, value: string) => {
     const newErrors = { ...errors };
-    
+
     if (field === 'email') {
       const emailValidation = validateEmail(value);
       if (!emailValidation.isValid) {
@@ -39,7 +39,7 @@ const Login = () => {
         delete newErrors.password;
       }
     }
-    
+
     setErrors(newErrors);
   };
 
@@ -95,26 +95,26 @@ const Login = () => {
   };
 
   const roleOptions = [
-    { value: roles.ADMIN, label: 'Admin', color: 'bg-primary' },
-    { value: roles.DOCTOR, label: 'Dokter', color: 'bg-secondary' },
-    { value: roles.NURSE, label: 'Perawat', color: 'bg-accent' },
-    { value: roles.PHARMACY, label: 'Apoteker', color: 'bg-medical-green' },
-    { value: roles.OWNER, label: 'Pemilik', color: 'bg-medical-teal' },
-    { value: roles.PATIENT, label: 'Pasien', color: 'bg-blue-500' },
+    { value: roles.ADMIN, label: 'Admin' },
+    { value: roles.DOCTOR, label: 'Dokter' },
+    { value: roles.NURSE, label: 'Perawat' },
+    { value: roles.PHARMACY, label: 'Apoteker' },
+    { value: roles.OWNER, label: 'Pemilik' },
+    { value: roles.PATIENT, label: 'Pasien' },
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted to-background p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
-            <Stethoscope className="h-7 w-7 text-primary-foreground" />
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 font-sans">
+      <Card className="w-full max-w-md border-none shadow-2xl bg-white/90 backdrop-blur-sm rounded-2xl">
+        <CardHeader className="space-y-2 text-center pb-6 pt-8">
+          <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-2 shadow-lg shadow-blue-200">
+            <Stethoscope className="h-8 w-8 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold">Klinik Sentosa</CardTitle>
-          <CardDescription>Masuk ke sistem manajemen klinik</CardDescription>
+          <CardTitle className="text-3xl font-bold text-slate-800 tracking-tight">Klinik Sentosa</CardTitle>
+          <CardDescription className="text-slate-500 text-base">Masuk ke sistem manajemen klinik</CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+        <CardContent className="space-y-6 px-8">
+          <form onSubmit={handleLogin} className="space-y-5">
             {/* Email Validation */}
             <FormField
               label="Email"
@@ -123,6 +123,7 @@ const Login = () => {
               required
               showValidIcon
               showErrorIcon
+              className="space-y-1.5"
             >
               <FormInput
                 id="email"
@@ -133,6 +134,7 @@ const Login = () => {
                 onBlur={() => handleBlur('email')}
                 disabled={isLoading}
                 autoComplete="email"
+                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
               />
             </FormField>
 
@@ -145,6 +147,7 @@ const Login = () => {
               showValidIcon
               showErrorIcon
               helperText="Minimal 6 karakter"
+              className="space-y-1.5"
             >
               <FormInput
                 id="password"
@@ -155,57 +158,41 @@ const Login = () => {
                 onBlur={() => handleBlur('password')}
                 disabled={isLoading}
                 autoComplete="current-password"
+                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
               />
             </FormField>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Pilih Role
+            <div className="space-y-3">
+              <label className="text-sm font-semibold text-slate-700 leading-none">
+                Role
               </label>
-              <div className="grid grid-cols-2 gap-2">
-                {roleOptions.map((role) => (
-                  <button
-                    key={role.value}
-                    type="button"
-                    onClick={() => setSelectedRole(role.value)}
-                    disabled={isLoading}
-                    className={`
-                      px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                      ${selectedRole === role.value
-                        ? `${role.color} text-white shadow-md scale-105`
-                        : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                      }
-                      ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
-                    `}
-                  >
-                    {role.label}
-                  </button>
-                ))}
-              </div>
+              <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as Role)}>
+                <SelectTrigger className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl">
+                  <SelectValue placeholder="Pilih Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {roleOptions.map((role) => (
+                    <SelectItem key={role.value} value={role.value}>
+                      {role.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              size="lg"
+            <Button
+              type="submit"
+              className="w-full h-12 text-base font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all duration-300"
               disabled={isLoading}
             >
               {isLoading ? 'Sedang masuk...' : 'Masuk'}
             </Button>
-
-            <Alert variant="info" className="mt-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Demo</AlertTitle>
-              <AlertDescription>
-                Gunakan email dan password apa saja untuk login (fitur demo)
-              </AlertDescription>
-            </Alert>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
+        <CardFooter className="flex justify-center pb-8">
+          <p className="text-sm text-slate-500">
             Belum punya akun?{' '}
-            <Link to="/register" className="text-primary hover:underline font-medium">
+            <Link to="/register" className="text-blue-600 hover:text-blue-700 hover:underline font-semibold transition-colors">
               Daftar di sini
             </Link>
           </p>

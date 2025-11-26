@@ -1,0 +1,471 @@
+{
+  "patients": [
+    {
+      "id": "P001",
+      "name": "Budi Santoso",
+      "age": 45,
+      "gender": "Laki-laki",
+      "address": "Jl. Merdeka No. 10",
+      "phone": "081234567890",
+      "lastVisit": "2024-03-10"
+    },
+    {
+      "id": "P002",
+      "name": "Siti Nurhaliza",
+      "age": 28,
+      "gender": "Perempuan",
+      "address": "Jl. Sudirman No. 5",
+      "phone": "081298765432",
+      "lastVisit": "2024-03-15"
+    },
+    {
+      "id": "P003",
+      "name": "Ahmad Fauzi",
+      "age": 35,
+      "gender": "Laki-laki",
+      "address": "Jl. Gatot Subroto No. 88",
+      "phone": "081345678901"
+    },
+    {
+      "id": "P004",
+      "name": "Bryan",
+      "age": 19,
+      "gender": "Laki-laki",
+      "phone": "085395871109",
+      "address": "Manado",
+      "lastVisit": "2025-11-26"
+    },
+    {
+      "id": "P005",
+      "name": "Faimel ",
+      "age": 20,
+      "gender": "Laki-laki",
+      "phone": "0865852243",
+      "address": "Tompaso",
+      "lastVisit": "2025-11-26"
+    },
+    {
+      "id": "P006",
+      "name": "Delon",
+      "age": 29,
+      "gender": "Laki-laki",
+      "phone": "0898764557",
+      "address": "parigi"
+    },
+    {
+      "id": "P007",
+      "name": "Rendi",
+      "age": 15,
+      "gender": "Perempuan",
+      "phone": "0867556423",
+      "address": "Kotamobagu"
+    }
+  ],
+  "queue": [
+    {
+      "id": "Q001",
+      "patientId": "P001",
+      "patientName": "Budi Santoso",
+      "time": "09:30",
+      "status": "completed",
+      "doctor": "Dr. Sarah"
+    },
+    {
+      "id": "Q002",
+      "patientId": "P002",
+      "patientName": "Siti Nurhaliza",
+      "time": "10:15",
+      "status": "in-progress",
+      "doctor": "Dr. Ahmad"
+    },
+    {
+      "id": "Q003",
+      "patientId": "P004",
+      "patientName": "Bryan",
+      "time": "19.20",
+      "status": "completed",
+      "doctor": "Dr. Ahmad Fauzi",
+      "complaint": "Sakit gigi"
+    },
+    {
+      "id": "Q004",
+      "patientId": "P004",
+      "patientName": "Bryan",
+      "time": "19.59",
+      "status": "completed",
+      "doctor": "Dr. Sarah Wijaya",
+      "complaint": "Panas"
+    },
+    {
+      "id": "Q005",
+      "patientId": "P005",
+      "patientName": "Faimel ",
+      "time": "23.29",
+      "status": "completed",
+      "doctor": "Dr. Sarah Wijaya",
+      "complaint": "Pusing"
+    },
+    {
+      "id": "Q006",
+      "patientId": "P006",
+      "patientName": "Delon",
+      "time": "00.28",
+      "status": "waiting",
+      "doctor": "Dr. Sarah Wijaya",
+      "complaint": "sakit hati"
+    },
+    {
+      "id": "Q007",
+      "patientId": "P007",
+      "patientName": "Rendi",
+      "time": "00.30",
+      "status": "waiting",
+      "doctor": "Dr. Sarah Wijaya",
+      "complaint": "sakit perut"
+    }
+  ],
+  "medicines": [
+    {
+      "id": "M001",
+      "code": "PAR500",
+      "name": "Paracetamol 500mg",
+      "genericName": "Paracetamol",
+      "category": "Analgesik",
+      "manufacturer": "Kimia Farma",
+      "description": "Obat pereda nyeri dan penurun demam",
+      "stock": 385,
+      "minStock": 50,
+      "unit": "Tablet",
+      "price": 500,
+      "costPrice": 300,
+      "expiryDate": "2025-12-31",
+      "batchNumber": "PAR2024-001",
+      "supplier": "PT Pharma Medika",
+      "location": "Rak A1",
+      "requiresPrescription": false
+    },
+    {
+      "id": "M002",
+      "code": "AMX500",
+      "name": "Amoxicillin 500mg",
+      "genericName": "Amoxicillin",
+      "category": "Antibiotik",
+      "manufacturer": "Kalbe Farma",
+      "description": "Antibiotik untuk infeksi bakteri",
+      "stock": 79,
+      "minStock": 30,
+      "unit": "Kapsul",
+      "price": 2000,
+      "costPrice": 1200,
+      "expiryDate": "2025-06-30",
+      "batchNumber": "AMX2024-002",
+      "supplier": "PT Pharma Medika",
+      "location": "Rak B2",
+      "requiresPrescription": true
+    },
+    {
+      "id": "M003",
+      "code": "VTC1000",
+      "name": "Vitamin C 1000mg",
+      "genericName": "Ascorbic Acid",
+      "category": "Vitamin",
+      "manufacturer": "Bayer",
+      "description": "Suplemen vitamin C untuk daya tahan tubuh",
+      "stock": 388,
+      "minStock": 50,
+      "unit": "Tablet",
+      "price": 1500,
+      "costPrice": 800,
+      "expiryDate": "2026-03-15",
+      "batchNumber": "VTC2024-003",
+      "supplier": "PT Health Supplies",
+      "location": "Rak C1",
+      "requiresPrescription": false
+    },
+    {
+      "id": "M004",
+      "code": "OBH100",
+      "name": "OBH Sirup",
+      "genericName": "Dextromethorphan",
+      "category": "Batuk & Flu",
+      "manufacturer": "OBH Combi",
+      "description": "Obat batuk sirup",
+      "stock": 25,
+      "minStock": 20,
+      "unit": "Botol",
+      "price": 15000,
+      "costPrice": 10000,
+      "expiryDate": "2025-08-20",
+      "batchNumber": "OBH2024-004",
+      "supplier": "PT Health Supplies",
+      "location": "Rak D3",
+      "requiresPrescription": false
+    },
+    {
+      "id": "M005",
+      "code": "BET100",
+      "name": "Betadine",
+      "genericName": "Povidone Iodine",
+      "category": "Antiseptik",
+      "manufacturer": "Mundipharma",
+      "description": "Antiseptik untuk luka",
+      "stock": 49,
+      "minStock": 20,
+      "unit": "Botol",
+      "price": 25000,
+      "costPrice": 18000,
+      "expiryDate": "2026-01-10",
+      "batchNumber": "BET2024-005",
+      "supplier": "PT Medical Supplies",
+      "location": "Rak E1",
+      "requiresPrescription": false
+    },
+    {
+      "id": "M006",
+      "code": "IBU400",
+      "name": "Ibuprofen 400mg",
+      "genericName": "Ibuprofen",
+      "category": "Analgesik",
+      "manufacturer": "Dexa Medica",
+      "description": "Anti-inflamasi dan pereda nyeri",
+      "stock": 120,
+      "minStock": 40,
+      "unit": "Tablet",
+      "price": 1000,
+      "costPrice": 600,
+      "expiryDate": "2025-11-30",
+      "batchNumber": "IBU2024-006",
+      "supplier": "PT Pharma Medika",
+      "location": "Rak A2",
+      "requiresPrescription": false
+    },
+    {
+      "id": "M008",
+      "code": "OME20",
+      "name": "Omeprazole 20mg",
+      "genericName": "Omeprazole",
+      "category": "Lambung",
+      "manufacturer": "Kalbe Farma",
+      "description": "Obat maag dan asam lambung",
+      "stock": 65,
+      "minStock": 25,
+      "unit": "Kapsul",
+      "price": 3500,
+      "costPrice": 2000,
+      "expiryDate": "2025-09-25",
+      "batchNumber": "OME2024-008",
+      "supplier": "PT Pharma Medika",
+      "location": "Rak C2",
+      "requiresPrescription": true
+    },
+    {
+      "id": "M009",
+      "code": "MET500",
+      "name": "Metformin 500mg",
+      "genericName": "Metformin HCl",
+      "category": "Diabetes",
+      "manufacturer": "Dexa Medica",
+      "description": "Obat diabetes tipe 2",
+      "stock": 90,
+      "minStock": 35,
+      "unit": "Tablet",
+      "price": 1200,
+      "costPrice": 700,
+      "expiryDate": "2026-02-28",
+      "batchNumber": "MET2024-009",
+      "supplier": "PT Medical Supplies",
+      "location": "Rak D1",
+      "requiresPrescription": true
+    },
+    {
+      "id": "M010",
+      "code": "AML5",
+      "name": "Amlodipine 5mg",
+      "genericName": "Amlodipine Besylate",
+      "category": "Hipertensi",
+      "manufacturer": "Kalbe Farma",
+      "description": "Obat tekanan darah tinggi",
+      "stock": 75,
+      "minStock": 30,
+      "unit": "Tablet",
+      "price": 2500,
+      "costPrice": 1500,
+      "expiryDate": "2025-10-15",
+      "batchNumber": "AML2024-010",
+      "supplier": "PT Pharma Medika",
+      "location": "Rak D2",
+      "requiresPrescription": true
+    }
+  ],
+  "prescriptions": [
+    {
+      "id": "RX001",
+      "patientId": "P004",
+      "patientName": "Bryan",
+      "doctorId": "S001",
+      "doctorName": "Dr. Sarah Wijaya",
+      "diagnosis": "Flu dan demam ringan",
+      "items": [
+        {
+          "medicineId": "M003",
+          "medicineName": "Vitamin C 1000mg",
+          "amount": 10,
+          "dosage": "1 tablet",
+          "frequency": "1x sehari",
+          "duration": "10 hari",
+          "instructions": "Sesudah makan pagi"
+        },
+        {
+          "medicineId": "M001",
+          "medicineName": "Paracetamol 500mg",
+          "amount": 6,
+          "dosage": "1 tablet",
+          "frequency": "3x sehari",
+          "duration": "2 hari",
+          "instructions": "Sesudah makan, jika demam"
+        }
+      ],
+      "date": "2025-11-26",
+      "status": "dispensed",
+      "totalPrice": 18000,
+      "createdAt": "2025-11-26T10:30:00",
+      "queueId": "Q004"
+    },
+    {
+      "id": "RX002",
+      "patientId": "P005",
+      "patientName": "Faimel ",
+      "doctorName": "Dr. Current User",
+      "items": [
+        {
+          "medicineId": "M001",
+          "medicineName": "Paracetamol 500mg",
+          "amount": 1,
+          "instructions": "Sesudah makan"
+        },
+        {
+          "medicineId": "M002",
+          "medicineName": "Amoxicillin 500mg",
+          "amount": 1,
+          "instructions": "Sesudah makan"
+        }
+      ],
+      "status": "dispensed",
+      "date": "2025-11-26",
+      "totalPrice": 2500,
+      "dispensedAt": "2025-11-26T15:47:46.680Z"
+    }
+  ],
+  "medicalRecords": [
+    {
+      "id": "MR001",
+      "patientId": "P004",
+      "complaint": "Sakit di bagian mulut",
+      "diagnosis": "Sakit",
+      "treatment": "",
+      "doctorName": "Dr. Current User",
+      "date": "2025-11-26"
+    },
+    {
+      "id": "MR002",
+      "patientId": "P005",
+      "complaint": "Sakit badan",
+      "diagnosis": "Sakit panas",
+      "treatment": "",
+      "doctorName": "Dr. Current User",
+      "date": "2025-11-26"
+    }
+  ],
+  "staff": [
+    {
+      "id": "S001",
+      "name": "Dr. Sarah Wijaya",
+      "role": "Dokter Umum",
+      "email": "sarah@kliniksentosa.com",
+      "phone": "08123456789",
+      "status": "active",
+      "specialty": "Penyakit Dalam & Umum"
+    },
+    {
+      "id": "S002",
+      "name": "Dr. Ahmad Fauzi",
+      "role": "Dokter Gigi",
+      "email": "ahmad@kliniksentosa.com",
+      "phone": "08198765432",
+      "status": "active",
+      "specialty": "Kesehatan Gigi & Mulut"
+    },
+    {
+      "id": "S003",
+      "name": "Dr. Linda Kusuma",
+      "role": "Dokter Anak",
+      "email": "linda@kliniksentosa.com",
+      "phone": "08234567890",
+      "status": "active",
+      "specialty": "Pediatri & Tumbuh Kembang"
+    },
+    {
+      "id": "S004",
+      "name": "Dr. Michael Tan",
+      "role": "Dokter Kulit",
+      "email": "michael@kliniksentosa.com",
+      "phone": "08345678901",
+      "status": "active",
+      "specialty": "Dermatologi & Kecantikan"
+    },
+    {
+      "id": "S005",
+      "name": "Dr. Rina Hartono",
+      "role": "Dokter Mata",
+      "email": "rina@kliniksentosa.com",
+      "phone": "08456789012",
+      "status": "active",
+      "specialty": "Oftalmologi"
+    },
+    {
+      "id": "S006",
+      "name": "Dr. Budi Santoso",
+      "role": "Dokter THT",
+      "email": "budi@kliniksentosa.com",
+      "phone": "08567890123",
+      "status": "active",
+      "specialty": "Telinga Hidung Tenggorokan"
+    },
+    {
+      "id": "S007",
+      "name": "Dr. Siti Rahayu",
+      "role": "Dokter Kandungan",
+      "email": "siti@kliniksentosa.com",
+      "phone": "08678901234",
+      "status": "active",
+      "specialty": "Obstetri & Ginekologi"
+    },
+    {
+      "id": "S008",
+      "name": "Dewi Lestari",
+      "role": "Apoteker",
+      "email": "dewi@kliniksentosa.com",
+      "phone": "08789012345",
+      "status": "active",
+      "specialty": "Farmasi"
+    },
+    {
+      "id": "S009",
+      "name": "Andi Wijaya",
+      "role": "Perawat",
+      "email": "andi@kliniksentosa.com",
+      "phone": "08890123456",
+      "status": "active",
+      "specialty": "Keperawatan Umum"
+    },
+    {
+      "id": "S010",
+      "name": "Putri Admin",
+      "role": "Admin",
+      "email": "admin@kliniksentosa.com",
+      "phone": "08901234567",
+      "status": "active",
+      "specialty": "Administrasi"
+    }
+  ]
+}

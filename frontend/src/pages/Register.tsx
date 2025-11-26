@@ -3,18 +3,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { FormField, FormInput } from '@/components/ui/form-field';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/validation-feedback';
-import { UserPlus, CheckCircle2 } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { roles, Role } from '@/contexts/AuthContext';
-import { 
-  validateRegisterForm, 
-  validateName, 
-  validateEmail, 
-  validatePassword, 
-  validateConfirmPassword 
+import {
+    validateRegisterForm,
+    validateName,
+    validateEmail,
+    validatePassword,
+    validateConfirmPassword
 } from '@/lib/validators';
 import { formatErrorMessage, getSuccessMessage } from '@/services/errorService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -24,11 +24,11 @@ const Register = () => {
         confirmPassword: '',
     });
     const [selectedRole, setSelectedRole] = useState<Role>(roles.PATIENT);
-    const [touched, setTouched] = useState({ 
-        name: false, 
-        email: false, 
-        password: false, 
-        confirmPassword: false 
+    const [touched, setTouched] = useState({
+        name: false,
+        email: false,
+        password: false,
+        confirmPassword: false
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +36,7 @@ const Register = () => {
 
     const validateField = (field: string, value: string) => {
         const newErrors = { ...errors };
-        
+
         if (field === 'name') {
             const nameValidation = validateName(value, 'Nama');
             if (!nameValidation.isValid) {
@@ -66,7 +66,7 @@ const Register = () => {
                 delete newErrors.confirmPassword;
             }
         }
-        
+
         setErrors(newErrors);
     };
 
@@ -112,26 +112,26 @@ const Register = () => {
     };
 
     const roleOptions = [
-        { value: roles.ADMIN, label: 'Admin', color: 'bg-primary' },
-        { value: roles.DOCTOR, label: 'Dokter', color: 'bg-secondary' },
-        { value: roles.NURSE, label: 'Perawat', color: 'bg-accent' },
-        { value: roles.PHARMACY, label: 'Apoteker', color: 'bg-medical-green' },
-        { value: roles.OWNER, label: 'Pemilik', color: 'bg-medical-teal' },
-        { value: roles.PATIENT, label: 'Pasien', color: 'bg-blue-500' },
+        { value: roles.ADMIN, label: 'Admin' },
+        { value: roles.DOCTOR, label: 'Dokter' },
+        { value: roles.NURSE, label: 'Perawat' },
+        { value: roles.PHARMACY, label: 'Apoteker' },
+        { value: roles.OWNER, label: 'Pemilik' },
+        { value: roles.PATIENT, label: 'Pasien' },
     ];
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted to-background p-4">
-            <Card className="w-full max-w-md shadow-xl">
-                <CardHeader className="space-y-1 text-center">
-                    <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
-                        <UserPlus className="h-7 w-7 text-primary-foreground" />
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 font-sans">
+            <Card className="w-full max-w-md border-none shadow-2xl bg-white/90 backdrop-blur-sm rounded-2xl">
+                <CardHeader className="space-y-2 text-center pb-6 pt-8">
+                    <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-2 shadow-lg shadow-blue-200">
+                        <UserPlus className="h-8 w-8 text-white" />
                     </div>
-                    <CardTitle className="text-2xl font-bold">Daftar Akun Baru</CardTitle>
-                    <CardDescription>Buat akun untuk mengakses sistem</CardDescription>
+                    <CardTitle className="text-3xl font-bold text-slate-800 tracking-tight">Daftar Akun Baru</CardTitle>
+                    <CardDescription className="text-slate-500 text-base">Buat akun untuk mengakses sistem</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleRegister} className="space-y-4">
+                <CardContent className="space-y-6 px-8">
+                    <form onSubmit={handleRegister} className="space-y-5">
                         {/* Name Validation */}
                         <FormField
                             label="Nama Lengkap"
@@ -140,6 +140,7 @@ const Register = () => {
                             required
                             showValidIcon
                             showErrorIcon
+                            className="space-y-1.5"
                         >
                             <FormInput
                                 id="name"
@@ -151,6 +152,7 @@ const Register = () => {
                                 onBlur={() => handleBlur('name')}
                                 disabled={isLoading}
                                 autoComplete="name"
+                                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
                             />
                         </FormField>
 
@@ -162,6 +164,7 @@ const Register = () => {
                             required
                             showValidIcon
                             showErrorIcon
+                            className="space-y-1.5"
                         >
                             <FormInput
                                 id="email"
@@ -173,6 +176,7 @@ const Register = () => {
                                 onBlur={() => handleBlur('email')}
                                 disabled={isLoading}
                                 autoComplete="email"
+                                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
                             />
                         </FormField>
 
@@ -185,6 +189,7 @@ const Register = () => {
                             showValidIcon
                             showErrorIcon
                             helperText="Minimal 6 karakter"
+                            className="space-y-1.5"
                         >
                             <FormInput
                                 id="password"
@@ -196,6 +201,7 @@ const Register = () => {
                                 onBlur={() => handleBlur('password')}
                                 disabled={isLoading}
                                 autoComplete="new-password"
+                                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
                             />
                         </FormField>
 
@@ -207,6 +213,7 @@ const Register = () => {
                             required
                             showValidIcon
                             showErrorIcon
+                            className="space-y-1.5"
                         >
                             <FormInput
                                 id="confirmPassword"
@@ -218,49 +225,41 @@ const Register = () => {
                                 onBlur={() => handleBlur('confirmPassword')}
                                 disabled={isLoading}
                                 autoComplete="new-password"
+                                className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl"
                             />
                         </FormField>
 
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Pilih Role
+                        <div className="space-y-3">
+                            <label className="text-sm font-semibold text-slate-700 leading-none">
+                                Role
                             </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {roleOptions.map((role) => (
-                                    <button
-                                        key={role.value}
-                                        type="button"
-                                        onClick={() => setSelectedRole(role.value)}
-                                        disabled={isLoading}
-                                        className={`
-                      px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                      ${selectedRole === role.value
-                                                ? `${role.color} text-white shadow-md scale-105`
-                                                : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                                            }
-                                        ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
-                    `}
-                                    >
-                                        {role.label}
-                                    </button>
-                                ))}
-                            </div>
+                            <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as Role)}>
+                                <SelectTrigger className="h-12 bg-blue-50/30 border-blue-100 focus:border-blue-500 focus:ring-blue-200 transition-all rounded-xl">
+                                    <SelectValue placeholder="Pilih Role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {roleOptions.map((role) => (
+                                        <SelectItem key={role.value} value={role.value}>
+                                            {role.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        <Button 
-                            type="submit" 
-                            className="w-full" 
-                            size="lg"
+                        <Button
+                            type="submit"
+                            className="w-full h-12 text-base font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all duration-300"
                             disabled={isLoading}
                         >
                             {isLoading ? 'Sedang mendaftar...' : 'Daftar'}
                         </Button>
                     </form>
                 </CardContent>
-                <CardFooter className="flex justify-center">
-                    <p className="text-sm text-muted-foreground">
+                <CardFooter className="flex justify-center pb-8">
+                    <p className="text-sm text-slate-500">
                         Sudah punya akun?{' '}
-                        <Link to="/login" className="text-primary hover:underline font-medium">
+                        <Link to="/login" className="text-blue-600 hover:text-blue-700 hover:underline font-semibold transition-colors">
                             Masuk di sini
                         </Link>
                     </p>

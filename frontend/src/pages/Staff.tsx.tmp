@@ -1,0 +1,107 @@
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Search, Users2, Mail, Phone, Edit, Trash2, UserCheck, UserX, Stethoscope, Briefcase } from 'lucide-react';
+import { useData, Staff as StaffType } from '@/contexts/DataContext';
+import { toast } from 'sonner';
+import { staffService } from '@/services/staffService';
+
+const Staff = () => {
+  const { staff, addStaff, updateStaff, deleteStaff, updateStaffStatus } = useData();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState<StaffType | null>(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    role: '',
+    email: '',
+    phone: '',
+    specialty: ''
+  });
+
+  const roles = ['Dokter Umum', 'Dokter Gigi', 'Dokter Anak', 'Dokter Kulit', 'Dokter Mata', 'Dokter THT', 'Dokter Kandungan', 'Apoteker', 'Perawat', 'Admin'];
+
+  const filteredStaff = staff.filter(s => {
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.phone.includes(searchTerm);
+    const matchesRole = roleFilter === 'all' || s.role === roleFilter;
+    const matchesStatus = statusFilter === 'all' || s.status === statusFilter;
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
+  const activeStaff = staff.filter(s => s.status === 'active').length;
+  const doctors = staff.filter(s => s.role.toLowerCase().includes('dokter')).length;
+
+  const handleAddStaff = () => {
+    const validation = staffService.validateStaffData(formData);
+    if (!validation.isValid) {
+      toast.error(validation.error);
+      return;
+    }
+
+    addStaff({
+      ...staffService.formatStaffForSave(formData),
+      status: 'active',
+      specialty: formData.specialty || formData.role
+    });
+
+    setIsAddDialogOpen(false);
+    setFormData({ name: '', role: '', email: '', phone: '', specialty: '' });
+    toast.success('Staff berhasil ditambahkan!');
+  };
+
+  const handleEditStaff = () => {
+    if (!selectedStaff) return;
+
+    const validation = staffService.validateStaffData(formData);
+    if (!validation.isValid) {
+      toast.error(validation.error);
+      return;
+    }
+
+    updateStaff(selectedStaff.id, {
+      ...staffService.formatStaffForSave(formData),
+      specialty: formData.specialty || formData.role
+    });
+
+    setIsEditDialogOpen(false);
+    setSelectedStaff(null);
+    setFormData({ name: '', role: '', email: '', phone: '', specialty: '' });
+    toast.success('Data staff berhasil diperbarui!');
+  };
+
+  const handleDeleteStaff = (id: string, name: string) => {
+    if (window.confirm(`Apakah Anda yakin ingin menghapus ${name}?`)) {
+      deleteStaff(id);
+      toast.success('Staff berhasil dihapus!');
+    }
+  };
+
+  const handleToggleStatus = (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    updateStaffStatus(id, newStatus);
+    toast.success(`Status berhasil diubah menjadi ${newStatus === 'active' ? 'Aktif' : 'Nonaktif'}`);
+  };
+
+  const openEditDialog = (staffMember: StaffType) => {
+    setSelectedStaff(staffMember);
+    setFormData({
+      name: staffMember.name,
+      role: staffMember.role,
+      email: staffMember.email,
+      phone: staffMember.phone,
+      specialty: staffMember.specialty || staffMember.role
+    });
+    setIsEditDialogOpen(true);
