@@ -59,69 +59,34 @@
       "gender": "Perempuan",
       "phone": "0867556423",
       "address": "Kotamobagu"
+    },
+    {
+      "id": "P008",
+      "name": "Zeavani",
+      "age": 35,
+      "gender": "Laki-laki",
+      "phone": "082186784557",
+      "address": "Maluku",
+      "lastVisit": "2025-11-26"
+    },
+    {
+      "id": "P009",
+      "name": "yudo",
+      "age": 26,
+      "gender": "Perempuan",
+      "phone": "082167569867",
+      "address": "Manado"
     }
   ],
   "queue": [
     {
       "id": "Q001",
-      "patientId": "P001",
-      "patientName": "Budi Santoso",
-      "time": "09:30",
-      "status": "completed",
-      "doctor": "Dr. Sarah"
-    },
-    {
-      "id": "Q002",
-      "patientId": "P002",
-      "patientName": "Siti Nurhaliza",
-      "time": "10:15",
-      "status": "in-progress",
-      "doctor": "Dr. Ahmad"
-    },
-    {
-      "id": "Q003",
-      "patientId": "P004",
-      "patientName": "Bryan",
-      "time": "19.20",
-      "status": "completed",
-      "doctor": "Dr. Ahmad Fauzi",
-      "complaint": "Sakit gigi"
-    },
-    {
-      "id": "Q004",
-      "patientId": "P004",
-      "patientName": "Bryan",
-      "time": "19.59",
+      "patientId": "P009",
+      "patientName": "yudo",
+      "time": "08.34",
       "status": "completed",
       "doctor": "Dr. Sarah Wijaya",
-      "complaint": "Panas"
-    },
-    {
-      "id": "Q005",
-      "patientId": "P005",
-      "patientName": "Faimel ",
-      "time": "23.29",
-      "status": "completed",
-      "doctor": "Dr. Sarah Wijaya",
-      "complaint": "Pusing"
-    },
-    {
-      "id": "Q006",
-      "patientId": "P006",
-      "patientName": "Delon",
-      "time": "00.28",
-      "status": "waiting",
-      "doctor": "Dr. Sarah Wijaya",
-      "complaint": "sakit hati"
-    },
-    {
-      "id": "Q007",
-      "patientId": "P007",
-      "patientName": "Rendi",
-      "time": "00.30",
-      "status": "waiting",
-      "doctor": "Dr. Sarah Wijaya",
-      "complaint": "sakit perut"
+      "complaint": "Sakit mata"
     }
   ],
   "medicines": [
@@ -300,80 +265,44 @@
   "prescriptions": [
     {
       "id": "RX001",
-      "patientId": "P004",
-      "patientName": "Bryan",
-      "doctorId": "S001",
+      "patientId": "P009",
+      "patientName": "yudo",
       "doctorName": "Dr. Sarah Wijaya",
-      "diagnosis": "Flu dan demam ringan",
       "items": [
+        {
+          "medicineId": "M001",
+          "medicineName": "Paracetamol 500mg",
+          "amount": 1,
+          "instructions": "Sesudah makan"
+        },
         {
           "medicineId": "M003",
           "medicineName": "Vitamin C 1000mg",
-          "amount": 10,
-          "dosage": "1 tablet",
-          "frequency": "1x sehari",
-          "duration": "10 hari",
-          "instructions": "Sesudah makan pagi"
-        },
-        {
-          "medicineId": "M001",
-          "medicineName": "Paracetamol 500mg",
-          "amount": 6,
-          "dosage": "1 tablet",
-          "frequency": "3x sehari",
-          "duration": "2 hari",
-          "instructions": "Sesudah makan, jika demam"
-        }
-      ],
-      "date": "2025-11-26",
-      "status": "dispensed",
-      "totalPrice": 18000,
-      "createdAt": "2025-11-26T10:30:00",
-      "queueId": "Q004"
-    },
-    {
-      "id": "RX002",
-      "patientId": "P005",
-      "patientName": "Faimel ",
-      "doctorName": "Dr. Current User",
-      "items": [
-        {
-          "medicineId": "M001",
-          "medicineName": "Paracetamol 500mg",
           "amount": 1,
           "instructions": "Sesudah makan"
         },
         {
-          "medicineId": "M002",
-          "medicineName": "Amoxicillin 500mg",
+          "medicineId": "M004",
+          "medicineName": "OBH Sirup",
           "amount": 1,
           "instructions": "Sesudah makan"
         }
       ],
       "status": "dispensed",
-      "date": "2025-11-26",
-      "totalPrice": 2500,
-      "dispensedAt": "2025-11-26T15:47:46.680Z"
+      "date": "2025-11-27",
+      "totalPrice": 17000,
+      "dispensedAt": "2025-11-27T00:36:57.660Z"
     }
   ],
   "medicalRecords": [
     {
       "id": "MR001",
-      "patientId": "P004",
-      "complaint": "Sakit di bagian mulut",
-      "diagnosis": "Sakit",
+      "patientId": "P009",
+      "complaint": "Sakit Mata",
+      "diagnosis": "Sakit ",
       "treatment": "",
-      "doctorName": "Dr. Current User",
-      "date": "2025-11-26"
-    },
-    {
-      "id": "MR002",
-      "patientId": "P005",
-      "complaint": "Sakit badan",
-      "diagnosis": "Sakit panas",
-      "treatment": "",
-      "doctorName": "Dr. Current User",
-      "date": "2025-11-26"
+      "doctorName": "Dr. Sarah Wijaya",
+      "date": "2025-11-27"
     }
   ],
   "staff": [

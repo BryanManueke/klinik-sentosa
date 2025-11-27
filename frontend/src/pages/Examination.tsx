@@ -9,11 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Stethoscope, FileText, Save, ArrowLeft, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 import { useData } from '@/contexts/DataContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Examination = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { getPatient, addMedicalRecord, addPrescription, medicines, medicalRecords, queue, updateQueueStatus } = useData();
+  const { user } = useAuth();
 
   const patientId = searchParams.get('patientId');
   const patient = patientId ? getPatient(patientId) : null;
@@ -86,20 +88,20 @@ const Examination = () => {
       return;
     }
 
-    if (patient) {
+    if (patient && user) {
       addMedicalRecord({
         patientId: patient.id,
         complaint: formData.complaint,
         diagnosis: formData.diagnosis,
         treatment: formData.prescriptionNotes,
-        doctorName: 'Dr. Current User'
+        doctorName: user.name
       });
 
       if (prescriptionItems.length > 0) {
         addPrescription({
           patientId: patient.id,
           patientName: patient.name,
-          doctorName: 'Dr. Current User',
+          doctorName: user.name,
           items: prescriptionItems,
           status: 'ready'
         });

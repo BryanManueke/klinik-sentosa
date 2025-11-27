@@ -49,7 +49,11 @@ const Dashboard = () => {
 
   // Find patient data
   const patientData = user?.role === roles.PATIENT
-    ? patients.find(p => p.name.toLowerCase() === user.name.toLowerCase())
+    ? patients.find(p =>
+      p.name.toLowerCase() === user.name.toLowerCase() ||
+      user.name.toLowerCase().includes(p.name.toLowerCase()) ||
+      p.name.toLowerCase().includes(user.name.toLowerCase())
+    )
     : null;
 
   // Get active doctors only
@@ -113,7 +117,10 @@ const Dashboard = () => {
       // Check if patient exists or create new one
       let currentPatientId = patientData?.id;
 
-      if (!currentPatientId) {
+      // If the name entered is different from the logged-in user's name, treat it as a new patient
+      const isNewPatient = patientData && queueForm.name.toLowerCase() !== patientData.name.toLowerCase();
+
+      if (!currentPatientId || isNewPatient) {
         // Create new patient
         const newPatientData = {
           name: queueForm.name,
@@ -555,10 +562,11 @@ const Dashboard = () => {
                 <DialogHeader>
                   <DialogTitle className="text-2xl flex items-center gap-2">
                     <FileText className="h-6 w-6 text-blue-600" />
-                    Riwayat Medis Lengkap
+                    Riwayat Medis: {patientData?.name}
                   </DialogTitle>
-                  <DialogDescription>
-                    Semua riwayat pemeriksaan dan diagnosis Anda
+                  <DialogDescription className="flex items-center gap-2 text-base">
+                    <Badge variant="outline" className="px-2 py-0.5">{patientData?.id}</Badge>
+                    <span>{patientData?.gender}, {patientData?.age} Tahun</span>
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
@@ -569,7 +577,7 @@ const Dashboard = () => {
                     </div>
                   ) : (
                     patientRecords.map((record, index) => (
-                      <Card key={record.id} className="border-2 hover:border-blue-500 transition-colors">
+                      <Card key={record.id} className="border-2 hover:border-blue-500 transition-colors group">
                         <CardHeader>
                           <div className="flex items-start justify-between">
                             <div>
@@ -601,6 +609,39 @@ const Dashboard = () => {
                               <p className="text-sm font-medium">{record.treatment}</p>
                             </div>
                           )}
+
+                          {/* Integrated Prescription Data */}
+                          {(() => {
+                            const prescription = patientPrescriptions.find(p => p.date === record.date);
+                            if (prescription) {
+                              return (
+                                <div className="mt-4 border-t pt-4">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm font-semibold flex items-center gap-2">
+                                      <Pill className="h-4 w-4 text-purple-600" />
+                                      Resep & Obat
+                                    </p>
+                                    <Badge variant={prescription.status === 'dispensed' ? 'default' : 'outline'} className={prescription.status === 'dispensed' ? 'bg-green-600' : ''}>
+                                      {prescription.status === 'dispensed' ? 'Lunas / Selesai' : 'Belum Lunas'}
+                                    </Badge>
+                                  </div>
+                                  <div className="bg-purple-50 dark:bg-purple-950/20 rounded-lg p-3 border border-purple-200 dark:border-purple-800 space-y-2">
+                                    {prescription.items.map((item: any, idx: number) => (
+                                      <div key={idx} className="flex justify-between text-sm">
+                                        <span>{item.medicineName} <span className="text-muted-foreground">x{item.amount}</span></span>
+                                        <span className="italic text-muted-foreground">{item.instructions}</span>
+                                      </div>
+                                    ))}
+                                    <div className="border-t border-purple-200 dark:border-purple-800 pt-2 mt-2 flex justify-between font-semibold">
+                                      <span>Total Biaya</span>
+                                      <span>Rp {prescription.totalPrice.toLocaleString('id-ID')}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
                         </CardContent>
                       </Card>
                     ))
@@ -610,9 +651,9 @@ const Dashboard = () => {
                   <Button variant="outline" onClick={() => setShowHistoryDialog(false)}>
                     Tutup
                   </Button>
-                  <Button onClick={handleViewHistory}>
-                    <ArrowRight className="h-4 w-4 mr-2" />
-                    Lihat Detail Lengkap
+                  <Button onClick={handleViewHistory} className="bg-blue-600 hover:bg-blue-700">
+                    <User className="h-4 w-4 mr-2" />
+                    Buka Profil Pasien Lengkap
                   </Button>
                 </div>
               </DialogContent>

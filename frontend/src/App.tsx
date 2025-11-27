@@ -56,7 +56,7 @@ const App = () => (
               <Route
                 path="/patients/:id"
                 element={
-                  <RoleGuard allowedRoles={[roles.ADMIN, roles.OWNER, roles.DOCTOR, roles.NURSE]}>
+                  <RoleGuard allowedRoles={[roles.ADMIN, roles.OWNER, roles.DOCTOR, roles.NURSE, roles.PATIENT]}>
                     <AppLayout><PatientDetail /></AppLayout>
                   </RoleGuard>
                 }
